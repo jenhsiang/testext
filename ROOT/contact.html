@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>聯絡我們</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="container">
+        <header>
+        	<div class="logo"><img src="images/logo.png" width="70" height="48" alt="測試" border="0"></div>
+            <div class="company">測試</div>
+        </header>
+        <nav>
+        	<ul>
+            	<li class="m-1"><a href="about.html" target="_self">關於我們</a></li>
+                <li class="m-2"><a href="service.html" target="_self">服務項目</a></li>
+                <li class="m-3"><a href="price.html" target="_self">收費標準</a></li>
+                <li class="m-4"><a href="qa.html" target="_self">常用問題</a></li>
+                <li class="m-5"><a href="link.html" target="_self">常用連結</a></li>
+                <li class="m-6"><a href="contact.html" target="_self">聯絡我們</a></li>
+            </ul>
+        </nav>
+        <div id="slider">
+        	<img src="img/img_03.png" width="100%" border="0" id="img1">
+            <img src="img/img_04.png" width="100%" border="0" id="img2">
+        </div>
+        <article>
+        <aside class="aside-left-1">
+			<div class="label ll-6"></div>
+            <form id="contact_form">
+            <input type="hidden" id="contactidentity" name="identity" value="">
+            	<p class="tp">告訴我們您的身分以便我們提供最佳的服務：</p>
+				<label class="radio"><input type="radio" name="RadioGroup1" value="尚未創業，想諮詢設立相關">尚未創業，想諮詢設立相關</label><br>
+                <label class="radio"><input type="radio" name="RadioGroup1" value="已有公司，想詢問記帳、稅務相關">已有公司，想詢問記帳、稅務相關</label><br>
+                <label class="radio"><input type="radio" name="RadioGroup1" value="其他">其他</label><br>
+                <input type="text" id="contactname" name="name" placeholder="Name" class="text2 tp" maxlength="20"><br>
+                <input type="text" id="contactemail" name="email" placeholder="E-mail" class="text2" maxlength="50"><br>
+                <input type="text" id="contactphone" name="phone" placeholder="phone" class="text2" maxlength="20"><br>
+                <textarea id="contactmessage" name="message" placeholder="Message" class="text4"></textarea>
+                <div class="btns"><input type="reset" value="清除" class="login-button" id="contactclear" ><input type="button" value="送出" class="login-button" onclick="form_submit('contact');" id="contactsubmit" ></div>
+            </form>
+            <div class="label ll-11"></div>
+			<ul class="contact">
+            	<li>電話：</li>
+                <li>手機：&nbsp;&nbsp;</li>
+                <li>傳真：</li>
+                <li>Mail：&nbsp;&nbsp;<a href="mailto:chentai008@yahoo.com" class="mail2">chentai008@yahoo.com</a></li>
+                <li>地址：&nbsp;&nbsp;新北市</li>
+            </ul>
+        </aside>
+        <aside class="aside-right-1">
+        	<ul id="right-icon">
+            	<li><div class="ricon icon-1"></div>設立流程</li>
+                <li><div class="ricon icon-2"></div>服務時程</li>
+                <li><div class="ricon icon-3"></div>公司與行號<br>的差別</li>
+                <li><div class="ricon icon-4"></div>文件下載</li>
+            </ul>
+        </aside>
+        </article>
+        <footer>電話：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;傳真：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mail:<a href="mailto:rocky@ztaf.net" class="mail">chentai008@yahoo.com</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;統編：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地址：新北市<br></footer>
+    </div>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/jquery.backgroundPosition.js"></script>
+<script src="js/cs.js"></script>
+<script>
+(function(){
+	
+	$('.m-6>a').css({color:'#17ade5'});
+	
+	$(window).resize(function() {
+		$('article').css({height:$('.aside-left-1').height()+100});
+	}).trigger('resize');
+		
+})();
+function form_submit(element) {
+	$('#'+element+'submit').attr('disabled', true);
+	$('#'+element+'clear').attr('disabled', true);
+
+    var msg = '';
+    var identity = '';
+	var RadioGroup1 = document.getElementsByName("RadioGroup1");
+	for (var i=0;i<RadioGroup1.length;i++) {
+        if (RadioGroup1[i].checked) {
+        	identity = RadioGroup1[i].value;
+        	$('#'+element+'identity').val(identity);
+          break;
+        }
+      }
+    
+	if (identity == '')
+	        msg += '沒有選擇 "身分"\n';
+    if ($('#'+element+'name').val().length == 0)
+        msg += '沒有填寫 "姓名"\n';
+    else if ($('#'+element+'name').val().length < 2)
+        msg += '"姓名"請填寫詳細\n';
+
+    if ($('#'+element+'phone').val().length == 0)
+        msg += '沒有填寫 "電話"\n';
+    else if (/\d{10,}/.test($('#'+element+'phone').val()) === false)
+        msg += '格式有錯 "電話"\n';
+
+    if ($('#'+element+'email').val().length == 0)
+        msg += '沒有填寫 "E-mail"\n';
+    else if (/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test($('#'+element+'email').val()) === false)
+        msg += '格式有誤 "E-mail"\n';
+    
+    if ($('#'+element+'message').val().length == 0)
+        msg += '沒有填寫 "訊息"\n';
+   
+    if (msg.length == 0){
+        $.ajax({
+            url: "/controller/MailHandler.jsp",
+            data:$("#"+element+"_form").serialize(),
+            type: "POST",
+            dataType: "json",
+            success: function(data,textStatus,jqXHR) {
+            	console.log(data);
+            	console.log(textStatus);
+            	console.log(jqXHR);
+            	if(data == 0){
+            		$('#'+element+'submit').attr('disabled', false);
+                	$('#'+element+'clear').attr('disabled', false);
+            		alert('驗證碼輸入錯誤');
+            	}else if (data == 2){
+            		console.log('寄信成功');
+            		$('#'+element+'submit').attr('disabled', false);
+                	$('#'+element+'clear').attr('disabled', false);
+            		alert('感謝您的來信!將會有專人與您聯繫，謝謝。');
+            	}
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            	console.log('寄信失敗');
+            	console.log("XMLHttpRequest.status="+XMLHttpRequest.status+
+			    		"\nXMLHttpRequest.readyState="+XMLHttpRequest.readyState+"\ntextStatus="+textStatus+"\errorThrown="+errorThrown);
+            },
+            complete: function(XMLHttpRequest) {
+            	console.log('寄信結果');
+            	console.log(XMLHttpRequest);
+            }
+            
+        	});
+    }
+    else{
+    	$('#'+element+'submit').attr('disabled', false);
+    	$('#'+element+'clear').attr('disabled', false);
+        alert(msg);
+    }
+
+    return false;
+}
+</script>
+</body>
+</html>
